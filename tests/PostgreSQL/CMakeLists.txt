@@ -1,0 +1,3 @@
+add_executable(testPostgreSqlOperations TestPostgresOperations.cpp)
+target_include_directories(testPostgreSqlOperations PUBLIC ${CMAKE_SOURCE_DIR}/modules/PostgreSQL)
+target_link_libraries(testPostgreSqlOperations gmock_main postgresql)
