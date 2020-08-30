@@ -3,6 +3,8 @@
 #include <iomanip>
 #include <stdexcept>
 #include <optional>
+#include <algorithm>
+#include <iterator>
 
 std::string serializeTimePoint(const std::chrono::system_clock::time_point &time) {
   std::string result;
@@ -23,4 +25,10 @@ std::optional<std::chrono::system_clock::time_point> deserializeTimePoint(const 
   }
   std::time_t tt = std::mktime(&timeinfo);
   return std::chrono::system_clock::from_time_t(tt);
+}
+
+std::string readStringFromIstream(std::istream& istr, size_t length) {
+  std::string str(length, ' ');
+  istr.read(&str[0], length);
+  return str;
 }

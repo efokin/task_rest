@@ -8,13 +8,20 @@ enum class HttpMethod {
   get,
   post,
   del,
+  put,
   unknown
+};
+
+struct HttpHeader {
+  std::string path;
+  HttpMethod method;
+  size_t contentLength;
 };
 
 /// @param ResponseStream - reference to response stream
 /// @param Path
 /// @param HttpMethod
-using RequestHandlerCallback = std::function<int(std::ostream &ostr, const std::string &, HttpMethod)>;
+using RequestHandlerCallback = std::function<int(const HttpHeader &header, std::istream &body, std::ostream &ostr)>;
 
 class IServer {
  public:

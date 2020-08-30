@@ -1,0 +1,33 @@
+curl http://localhost:9080/task
+
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data @addTask.json \
+  http://localhost:9080/task
+
+curl --request DELETE http://localhost:9080/task/2
+
+curl --header "Content-Type: application/json" \
+  --request PUT \
+  --data @updateTask.json \
+  http://localhost:9080/task/3
+
+curl --header "Content-Type: application/json" \
+  --request GET \
+  --data @addTask.json \
+  http://localhost:9080/tasks/
+
+curl http://localhost:9080/subtask
+
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data @addSubtask.json \
+  http://localhost:9080/subtask
+
+curl --header "Content-Type: application/json" \
+  --request PUT \
+  --data @updateSubtask.json \
+  http://localhost:9080/subtask/1
+
+curl --request DELETE http://localhost:9080/subtask/2
+

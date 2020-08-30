@@ -1,12 +1,12 @@
 
 #include <gmock/gmock.h>
-#include "ICommand.hpp"
+#include "IEntity.hpp"
 #include "JsonSerializator.hpp"
 #include "Helper.hpp"
 
 using namespace testing;
 
-TEST(TestJSON, SerializeDeserialize) {
+TEST(TestTaskJSON, SerializeDeserialize) {
   Task task;
   task.id = 123;
   task.created = deserializeTimePoint("2020-01-01 12:00:00");
@@ -22,7 +22,23 @@ TEST(TestJSON, SerializeDeserialize) {
   ASSERT_THAT(deserialized_option->priority, Optional(3));
 }
 
-TEST(TestJSON, DeserializeTask) {
+TEST(TestTaskJSON, SerializeDeserializeRussian) {
+  Task task;
+  task.id = 123;
+  task.created = deserializeTimePoint("2020-01-01 12:00:00");
+  task.description = "Новая задача";
+  task.priority = 3;
+
+  std::string json_str = to_json(task);
+  auto deserialized_option = parse_task_from_json(json_str);
+  ASSERT_TRUE(deserialized_option.has_value());
+  ASSERT_THAT(deserialized_option->id, Optional(123));
+  ASSERT_THAT(deserialized_option->description, Optional(std::string("Новая задача")));
+  ASSERT_THAT(serializeTimePoint(deserialized_option->created.value()), Eq("2020-01-01 12:00:00"));
+  ASSERT_THAT(deserialized_option->priority, Optional(3));
+}
+
+TEST(TestTaskJSON, DeserializeTask) {
   std::string json_str(R"({
     "id":123,
     "description":"Description",
@@ -37,8 +53,26 @@ TEST(TestJSON, DeserializeTask) {
   ASSERT_THAT(test_optional->priority, Optional(3));
 }
 
-TEST(TestJSON, DeserializeWrongId) {
+TEST(TestTaskJSON, DeserializeWrongId) {
   std::string json_str(R"({"id":"abc"})");
   auto test_optional = parse_task_from_json(json_str);
   ASSERT_FALSE(test_optional.has_value());
+}
+
+TEST(TestSubtaskJSON, SerializeDeserialize) {
+  Subtask subtask;
+  subtask.id = 123;
+  subtask.taskId = 32;
+  subtask.created = deserializeTimePoint("2020-01-01 12:00:00");
+  subtask.description = "Description";
+  subtask.priority = 3;
+
+  std::string json_str = to_json(subtask);
+  auto deserialized_option = parse_subtask_from_json(json_str);
+  ASSERT_TRUE(deserialized_option.has_value());
+  ASSERT_THAT(deserialized_option->id, Optional(123));
+  ASSERT_THAT(deserialized_option->taskId, Optional(32));
+  ASSERT_THAT(deserialized_option->description, Optional(std::string("Description")));
+  ASSERT_THAT(serializeTimePoint(deserialized_option->created.value()), Eq("2020-01-01 12:00:00"));
+  ASSERT_THAT(deserialized_option->priority, Optional(3));
 }

@@ -1,3 +1,7 @@
 add_executable(testHttpListener TestHttpListener.cpp)
 target_include_directories(testHttpListener PUBLIC ${CMAKE_SOURCE_DIR}/modules/HttpServer)
 target_link_libraries(testHttpListener gmock_main http_poco_server)
+
+add_executable(testDispatcher TestDispatcher.cpp)
+target_include_directories(testDispatcher PUBLIC ${CMAKE_SOURCE_DIR}/modules/HttpServer)
+target_link_libraries(testDispatcher gmock_main http_poco_server)

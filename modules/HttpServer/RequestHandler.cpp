@@ -13,6 +13,9 @@ RequestHandler::RequestHandler(RequestHandlerCallback the_requestHandlerCallback
 
 HttpMethod getHttpMethod(const std::string& method) {
   if( method.compare("GET") == 0) return HttpMethod::get;
+  if( method.compare("POST") == 0 ) return HttpMethod::post;
+  if( method.compare("DELETE") == 0 ) return HttpMethod::del;
+  if( method.compare("PUT") == 0 ) return HttpMethod::put;
   return HttpMethod::unknown;
 }
 
@@ -27,9 +30,11 @@ void RequestHandler::handleRequest(HTTPServerRequest &request, HTTPServerRespons
 
   std::stringstream sstr;
   HttpMethod httpMethod = getHttpMethod(request.getMethod());
-
-  //if(httpMethod == HttpMethod::unknown) return;
-  auto response_code = requestHandlerCallback(sstr, request.getURI(), httpMethod);
+  HttpHeader header;
+  header.path = request.getURI();
+  header.method = httpMethod;
+  header.contentLength = request.getContentLength();
+  auto response_code = requestHandlerCallback(header,request.stream(),sstr);
   response.setStatusAndReason(HTTPResponse::HTTPStatus(response_code),"reason");
   app.logger().information("Response reason:" + response.getReason());
   app.logger().information("Response status:" + std::to_string( response.getStatus()));

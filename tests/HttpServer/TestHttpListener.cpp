@@ -4,7 +4,6 @@
 #include <Poco/Process.h>
 
 using namespace testing;
-using namespace std::placeholders;
 
 bool requiestIsReseived = false;
 int responseHandler(std::ostream &ostr, const std::string &, HttpMethod) {
